@@ -1,32 +1,38 @@
 package com.lg.taller.entity;
 
 import java.time.LocalDate;
+import java.util.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.*;
 
 @Entity
+@Table(name = "servicios")
 public class Servicio {
 
-	 	@Id
-	    @GeneratedValue(strategy = GenerationType.IDENTITY)
-	    private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	    private LocalDate fecha;
-	    private String descripcion;
-	    private double costo;
+    private LocalDate fecha;
+    private String descripcion;
+    private double costo;
 
-	    @ManyToOne
-	    @JoinColumn(name = "vehiculo_id", nullable = false)
-	    private Vehiculo vehiculo;
+    // 🔗 Relación con Vehículo
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "vehiculo_id")
+    @JsonIgnoreProperties({"servicios", "cliente", "hibernateLazyInitializer"})
+    private Vehiculo vehiculo;
 
-	    // Constructores
-	    public Servicio() {}
+    // Relación 1:N con Cita
+    @OneToMany(mappedBy = "servicio", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnoreProperties("servicio")
+    private List<Cita> citas = new ArrayList<>();
 
-	    public Servicio(LocalDate fecha, String descripcion, double costo, Vehiculo vehiculo) {
-	        this.fecha = fecha;
-	        this.descripcion = descripcion;
-	        this.costo = costo;
-	        this.vehiculo = vehiculo;
-	    }
+    public Servicio() {}
+
+    // getters y setters...
 
 		public Long getId() {
 			return id;

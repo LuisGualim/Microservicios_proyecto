@@ -3,25 +3,36 @@ package com.lg.taller.entity;
 import jakarta.persistence.*;
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
+@Table(name = "citas")
 public class Cita {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "cliente_id", nullable = false)
-    private Usuario cliente;
-    
-    @ManyToOne
-    @JoinColumn(name = "vehiculo_id", nullable = false)
+    private Date fechaCita;
+    private String estado;
+
+    // 🔗 Cliente asociado
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cliente_id")
+    @JsonIgnoreProperties({"vehiculos", "hibernateLazyInitializer"})
+    private Cliente cliente;
+
+    // 🔗 Vehículo asociado
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "vehiculo_id")
+    @JsonIgnoreProperties({"servicios", "cliente", "hibernateLazyInitializer"})
     private Vehiculo vehiculo;
-    
-    @ManyToOne
-    @JoinColumn(name = "servicio_id", nullable = false)
-    private Servicio servicio;
-    private Date fechaCita;  
-    private String estado;  
+
+    // 🔗 Servicio asociado
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "servicio_id")
+    @JsonIgnoreProperties({"vehiculo", "citas", "hibernateLazyInitializer"})
+    private Servicio servicio; 
 
     public Long getId() {
         return id;
@@ -31,13 +42,6 @@ public class Cita {
         this.id = id;
     }
 
-    public Usuario getCliente() {
-        return cliente;
-    }
-
-    public void setCliente(Usuario cliente) {
-        this.cliente = cliente;
-    }
 
     public Vehiculo getVehiculo() { 	
         return vehiculo;
@@ -70,4 +74,14 @@ public class Cita {
     public void setEstado(String estado) {
         this.estado = estado;
     }
+
+	public Cliente getCliente() {
+		return cliente;
+	}
+
+	public void setCliente(Cliente cliente) {
+		this.cliente = cliente;
+	}
+    
+    
 }

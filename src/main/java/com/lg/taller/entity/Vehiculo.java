@@ -1,10 +1,14 @@
 package com.lg.taller.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.*;
 
 @Entity
+@Table(name = "vehiculos")
 public class Vehiculo {
 
     @Id
@@ -16,13 +20,20 @@ public class Vehiculo {
     private int anio;
     private String placa;
 
-    @ManyToOne
-    @JoinColumn(name = "cliente_id", nullable = false)
-    @JsonIgnoreProperties("vehiculos")
+    // 🔗 Relación con Cliente (N:1)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cliente_id")
+    @JsonIgnoreProperties({"vehiculos", "hibernateLazyInitializer"})
     private Cliente cliente;
 
-    // Constructores
+    // Relación 1:N con Servicio
+    @OneToMany(mappedBy = "vehiculo", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnoreProperties("vehiculo")
+    private List<Servicio> servicios = new ArrayList<>();
+
     public Vehiculo() {}
+
+    // getters y setters...
 
     public Vehiculo(String marca, String modelo, int anio, String placa, Cliente cliente) {
         this.marca = marca;
