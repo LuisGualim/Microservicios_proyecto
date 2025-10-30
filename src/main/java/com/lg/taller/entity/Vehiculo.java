@@ -1,5 +1,7 @@
 package com.lg.taller.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -16,6 +18,7 @@ public class Vehiculo {
 
     @ManyToOne
     @JoinColumn(name = "cliente_id", nullable = false)
+    @JsonIgnoreProperties("vehiculos")
     private Cliente cliente;
 
     // Constructores

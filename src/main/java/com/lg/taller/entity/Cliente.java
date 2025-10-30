@@ -2,6 +2,8 @@ package com.lg.taller.entity;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -15,9 +17,10 @@ public class Cliente {
     private String telefono;
     private String correo;
 
-    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "cliente", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JsonIgnoreProperties("cliente")  // 🔥 evita referencia circular
     private List<Vehiculo> vehiculos;
-
+    
     // Constructores
     public Cliente() {}
 
