@@ -15,10 +15,10 @@ public class ClienteController {
 	 private ClienteService clienteService;
 	 
 	 @PostMapping
-	 public ResponseEntity<Cliente> crearCliente(@RequestBody Cliente cliente) {
-	     Cliente nuevo = clienteService.guardar(cliente);
-	     return ResponseEntity.ok(nuevo);
-	 }
+	    public ResponseEntity<Cliente> guardar(@RequestBody Cliente cliente) {
+	        Cliente nuevo = clienteService.guardar(cliente);
+	        return ResponseEntity.ok(nuevo); 	
+	    }
 
 	    @GetMapping
 	    public ResponseEntity<List<Cliente>> listar() {
